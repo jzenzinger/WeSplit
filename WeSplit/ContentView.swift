@@ -12,7 +12,7 @@ struct ContentView: View {
     @State private var numberOfPeople = 0
     @State private var tipPercentage = 0
     
-    let tips = [0, 5, 10, 15, 20, 25, 30]
+    let tips = [0, 5, 10, 15, 20, 25]
     
     var body: some View {
         NavigationView {
