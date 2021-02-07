@@ -15,32 +15,60 @@ struct ContentView: View {
     let tips = [0, 5, 10, 15, 20, 25]
     
     var body: some View {
-        NavigationView {
-            Form {
-                Section(header: Text("Input section")) {
-                    TextField("Amount", text: $checkAmount)
-                        .keyboardType(.decimalPad)
+        ZStack {
+            NavigationView {
+                Form {
+                    Section(header: Text("Input section")) {
+                        TextField("Amount", text: $checkAmount)
+                            .keyboardType(.decimalPad)
+                        
+                        Picker("Number of people", selection: $numberOfPeople) {
+                            ForEach(2 ..< 100) {
+                                Text("\($0) people")
+                            }
+                        }
+                    }
+                    Section(header: Text("How much tip do you want to leave?")) {
+                        Picker("Tip percentage", selection: $tipPercentage) {
+                            ForEach(0 ..< tips.count) {
+                                Text("\(self.tips[$0]) %")
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                    }
                     
-                    Picker("Number of people", selection: $numberOfPeople) {
-                        ForEach(2 ..< 100) {
-                            Text("\($0) people")
-                        }
+                    Section(header: Text("Total amount")) {
+                        Text("\(totalCheck, specifier: "%.2f") $")
+                    }
+                    Section(header: Text("Amount per person")) {
+                        Text("\(totalPerPerson, specifier: "%.2f") $")
                     }
                 }
-                Section(header: Text("How much tip do you want to leave?")) {
-                    Picker("Tip percentage", selection: $tipPercentage) {
-                        ForEach(0 ..< tips.count) {
-                            Text("\(self.tips[$0]) %")
-                        }
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                }
-                Section(header: Text("Final amount")) {
-                    Text("\(checkAmount) $")
-                }
+                .navigationBarTitle("WeSplit")
             }
-            .navigationBarTitle("WeSplit")
         }
+        .edgesIgnoringSafeArea(.all)
+    }
+    
+    var totalPerPerson: Double {
+        let peopleCount = Double(numberOfPeople + 2)
+        let tipSelection = Double(tips[tipPercentage])
+        let amount = Double(checkAmount) ?? 0
+        
+        let tipValue = amount / 100 * tipSelection
+        let grandTotal = amount + tipValue
+        let amountPerPerson = grandTotal / peopleCount
+        
+        return amountPerPerson
+    }
+    var totalCheck: Double {
+        let tipSelection = Double(tips[tipPercentage])
+        let amount = Double(checkAmount) ?? 0
+        
+        let tipValue = amount / 100 * tipSelection
+        let grandTotal = amount + tipValue
+        
+        return grandTotal
     }
 }
 
