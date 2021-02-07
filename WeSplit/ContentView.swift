@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var checkAmount = ""
-    @State private var numberOfPeople = 2
-    @State private var tipPercentage = 2
+    @State private var numberOfPeople = 0
+    @State private var tipPercentage = 0
     
     let tips = [0, 5, 10, 15, 20, 25, 30]
     
@@ -24,6 +24,12 @@ struct ContentView: View {
                     Picker("Number of people", selection: $numberOfPeople) {
                         ForEach(2 ..< 100) {
                             Text("\($0) people")
+                        }
+                    }
+                    
+                    Picker("Tip percentage", selection: $tipPercentage) {
+                        ForEach(0 ..< tips.count) {
+                            Text("\(self.tips[$0]) %")
                         }
                     }
                 }
